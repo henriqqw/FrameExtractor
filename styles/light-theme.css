@@ -1,0 +1,420 @@
+/* Light Theme Variables */
+:root {
+  /* Light Theme Colors */
+  --light-bg-primary: #ffffff;
+  --light-bg-secondary: #f5f5f5;
+  --light-panel-bg: #ffffff;
+  --light-panel-border: #e0e0e0;
+  --light-accent-red: #ff5555;
+  --light-accent-red-hover: #ff6666;
+  --light-text-primary: #333333;
+  --light-text-secondary: #666666;
+  --light-text-tertiary: #999999;
+  --light-success: #4caf50;
+  
+  /* Shadows and effects */
+  --light-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.1);
+  --light-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --light-shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Apply light theme styles when light-theme class is present */
+.light-theme {
+  background: var(--light-bg-primary);
+  color: var(--light-text-primary);
+}
+
+.light-theme body {
+  background: var(--light-bg-primary);
+}
+
+.light-theme .app-container {
+  background: var(--light-bg-primary);
+}
+
+.light-theme .navbar {
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid var(--light-panel-border);
+}
+
+.light-theme .app-main {
+  background: transparent;
+}
+
+.light-theme .nav-link {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .nav-link:hover {
+  color: var(--light-text-primary);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light-theme .nav-link.active {
+  color: var(--light-accent-red);
+  background: rgba(255, 85, 85, 0.1);
+}
+
+.light-theme .nav-logo {
+  color: var(--light-text-primary);
+}
+
+.light-theme .app-header h1 {
+  background: linear-gradient(0deg, var(--light-text-primary), var(--light-accent-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.light-theme .app-header p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .feature-card {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .feature-card:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .feature-icon {
+  background-color: rgba(255, 85, 85, 0.1);
+  color: var(--light-accent-red);
+}
+
+.light-theme .feature-card h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .feature-card p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .upload-area {
+  background: var(--light-panel-bg);
+  border: 2px dashed var(--light-panel-border);
+}
+
+.light-theme .upload-area:hover {
+  border-color: var(--light-accent-red);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--light-shadow-md);
+}
+
+.light-theme .upload-content h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .upload-content p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .file-info {
+  color: var(--light-text-tertiary);
+}
+
+.light-theme .macos-button {
+  background: linear-gradient(135deg, var(--light-panel-bg) 0%, var(--light-bg-secondary) 100%);
+  color: var(--light-text-primary);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .macos-button.primary {
+  background: linear-gradient(135deg, var(--light-accent-red) 0%, #ff3333 100%);
+  color: white;
+  box-shadow: var(--light-shadow-sm), 0 0 15px rgba(255, 85, 85, 0.3);
+}
+
+.light-theme .macos-button.primary:hover {
+  background: linear-gradient(135deg, var(--light-accent-red-hover) 0%, #ff4444 100%);
+  box-shadow: var(--light-shadow-md), 0 0 20px rgba(255, 85, 85, 0.4);
+}
+
+.light-theme .macos-button.secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: var(--light-text-primary);
+  border: 1px solid var(--light-panel-border);
+}
+
+.light-theme .macos-button.secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .selected-files {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .files-header h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .file-item {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--light-panel-border);
+}
+
+.light-theme .file-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light-theme .file-name {
+  color: var(--light-text-primary);
+}
+
+.light-theme .file-size {
+  color: var(--light-text-tertiary);
+}
+
+.light-theme .remove-file {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .remove-file:hover {
+  color: var(--light-accent-red);
+  background-color: rgba(255, 85, 85, 0.1);
+}
+
+.light-theme .results-section {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .summary-card {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--light-panel-border);
+}
+
+.light-theme .summary-card:hover {
+  box-shadow: var(--light-shadow-sm);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .summary-content h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .summary-content p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .detail-item {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--light-panel-border);
+}
+
+.light-theme .detail-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light-theme .detail-name {
+  color: var(--light-text-primary);
+}
+
+.light-theme .detail-stats {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .app-footer {
+  background: var(--light-panel-bg);
+  border-top: 1px solid var(--light-panel-border);
+  color: var(--light-text-secondary);
+}
+
+.light-theme .social-links a {
+  color: var(--light-text-secondary);
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--light-panel-border);
+}
+
+.light-theme .social-links a:hover {
+  color: var(--light-text-primary);
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--light-accent-red);
+}
+
+/* Form elements in light theme */
+.light-theme .form-input,
+.light-theme .form-textarea {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--light-panel-border);
+  color: var(--light-text-primary);
+}
+
+.light-theme .form-input:focus,
+.light-theme .form-textarea:focus {
+  border-color: var(--light-accent-red);
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.light-theme .form-group label {
+  color: var(--light-text-secondary);
+}
+
+/* Instructions and About pages */
+.light-theme .instructions-step {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .instructions-step:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .step-content h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .step-content p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .tip-card {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .tip-card:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .tip-card h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .tip-card p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .about-card {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .about-card:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .about-card h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .about-card p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .creator-section {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .creator-section:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .creator-section h2 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .creator-info p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .free-highlight {
+  background: linear-gradient(135deg, rgba(255, 85, 85, 0.1) 0%, rgba(255, 85, 85, 0.2) 100%);
+  border: 1px solid var(--light-accent-red);
+}
+
+.light-theme .free-highlight:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.light-theme .free-highlight h2 {
+  color: var(--light-accent-red);
+}
+
+.light-theme .free-highlight p {
+  color: var(--light-text-primary);
+}
+
+.light-theme .contact-section .contact-info h2,
+.light-theme .contact-section .contact-form-container h2 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .contact-section .contact-info p {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .contact-method h3 {
+  color: var(--light-text-primary);
+}
+
+.light-theme .contact-method p,
+.light-theme .contact-method a {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .contact-method a:hover {
+  color: var(--light-accent-red);
+}
+
+.light-theme .form-success {
+  color: var(--light-success);
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid var(--light-success);
+}
+
+.light-theme .form-error {
+  color: var(--light-accent-red);
+  background: rgba(255, 85, 85, 0.1);
+  border: 1px solid var(--light-accent-red);
+}
+
+/* Settings panel in light theme */
+.light-theme .settings {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.light-theme .setting-group label {
+  color: var(--light-text-secondary);
+}
+
+.light-theme .setting-group input[type="range"] {
+  background-color: var(--light-panel-border);
+}
+
+.light-theme .setting-group input[type="range"]:hover {
+  background-color: #d0d0d0;
+}
+
+.light-theme .setting-group input[type="range"]::-webkit-slider-thumb {
+  background-color: var(--light-accent-red);
+}
+
+.light-theme .setting-group input[type="range"]::-moz-range-thumb {
+  background-color: var(--light-accent-red);
+}
+
+.light-theme .checkbox-group label {
+  color: var(--light-text-primary);
+}

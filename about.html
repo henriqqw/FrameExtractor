@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - FrameExtractor</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/main.css">
+    <!-- Theme Script -->
+    <script type="module" src="js/theme.js" defer></script>
+</head>
+
+<body class="dark-theme">
+
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="app-nav glass-effect">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <h1>FrameExtractor</h1>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="howto.html" class="nav-link">How to Use</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                </div>
+                <div class="nav-actions">
+                    <button id="theme-toggle" class="macos-button secondary small" aria-label="Toggle Theme">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="theme-icon-sun hidden">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            class="theme-icon-moon">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="app-main">
+            <div class="window-container" style="padding: 3rem; max-width: 800px; margin: 0 auto;">
+                <h2 style="margin-bottom: 1.5rem; text-align: center; font-size: 2rem;">About FrameExtractor</h2>
+
+                <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 2rem;">
+                    FrameExtractor is a powerful, client-side tool designed to help you extract high-quality frames from
+                    your videos securely.
+                    Unlike other online converters, FrameExtractor processes everything locally in your browser,
+                    ensuring your private videos never leave your device.
+                </p>
+
+                <div class="features-section" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        <h3>Privacy Focused</h3>
+                        <p>No server uploads. Your data stays on your machine.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                            </svg>
+                        </div>
+                        <h3>High Performance</h3>
+                        <p>Optimized for speed using modern browser technologies.</p>
+                    </div>
+                </div>
+
+                <div
+                    style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: center;">
+                    <p style="color: var(--text-tertiary); font-size: 0.9rem;">
+                        Design inspired by <a href="https://github.com/henriqqw/EasyWebPConverter" target="_blank"
+                            style="color: var(--accent-primary); text-decoration: none;">EasyWebPConverter</a>.
+                    </p>
+                    <p style="color: var(--text-tertiary); font-size: 0.9rem; margin-top: 0.5rem;">
+                        Developed by caosdev.
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <p>FrameExtractor - Built with ❤️ by caosdev</p>
+            <p class="footer-note">Privacy friendly - files never leave your device.</p>
+        </footer>
+    </div>
+</body>
+
+</html>

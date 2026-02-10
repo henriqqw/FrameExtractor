@@ -1,0 +1,91 @@
+/* About Page Styles */
+.aboutSection {
+  margin-bottom: 3rem;
+}
+
+.aboutCard {
+  border-radius: 16px;
+  padding: 1.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
+  margin-bottom: 1.5rem;
+}
+
+:global(.dark-theme) .aboutCard {
+  background: rgba(42, 42, 42, 0.7);
+  border: 1px solid var(--macos-panel-border);
+  box-shadow: var(--macos-shadow-sm);
+}
+
+:global(.light-theme) .aboutCard {
+  background: var(--light-panel-bg);
+  border: 1px solid var(--light-panel-border);
+  box-shadow: var(--light-shadow-sm);
+}
+
+.aboutCard:hover {
+  transform: translateY(-5px);
+}
+
+:global(.dark-theme) .aboutCard:hover {
+  box-shadow: var(--macos-shadow-md);
+  border-color: var(--macos-accent-red);
+}
+
+:global(.light-theme) .aboutCard:hover {
+  box-shadow: var(--light-shadow-md);
+  border-color: var(--light-accent-red);
+}
+
+.aboutCard h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+:global(.dark-theme) .aboutCard h2 {
+  color: var(--macos-text-primary);
+}
+
+:global(.light-theme) .aboutCard h2 {
+  color: var(--light-text-primary);
+}
+
+/* Estiliza os ícones para terem a cor vermelha do tema e estar centralizados */
+.aboutCard h2 svg {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+:global(.dark-theme) .aboutCard h2 svg {
+  color: var(--macos-accent-red);
+}
+
+:global(.light-theme) .aboutCard h2 svg {
+  color: var(--light-accent-red);
+}
+
+.aboutCard p {
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+:global(.dark-theme) .aboutCard p {
+  color: var(--macos-text-secondary);
+}
+
+:global(.light-theme) .aboutCard p {
+  color: var(--light-text-secondary);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .aboutCard h2 {
+    font-size: 1.3rem;
+  }
+}
