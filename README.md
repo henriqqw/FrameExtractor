@@ -12,6 +12,7 @@
 ```
 
 # 🎬 FrameExtractor 🎬
+<img width="100" height="100" alt="Mascote cibernético da FrameExtractor" src="https://github.com/user-attachments/assets/4dcf9ca1-8d0f-488c-912e-e6f6b024d1ff" />
 
 ### ⚡ *Secure Client-Side Video Frame Extraction* ⚡
 
