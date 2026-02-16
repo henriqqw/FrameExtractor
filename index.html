@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.plyr.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.plyr.io; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' https://cdnjs.cloudflare.com;">
+        content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.plyr.io; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.plyr.io; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob: data:; connect-src 'self' https://cdnjs.cloudflare.com https://cdn.plyr.io;">
     <title>FrameXtractor</title>
     <meta name="description"
         content="Extract the first frame or all frames from a video file securely in your browser.">
@@ -135,17 +135,27 @@
                 <!-- Video Preview -->
                 <div class="video-preview-container">
                     <video id="video-element" controls playsinline muted></video>
-                    <div class="video-info">
-                        <span id="file-name">video.mp4</span>
-                        <span class="dot">•</span>
-                        <span id="video-duration">00:00</span>
-                        <span class="dot">•</span>
-                        <span id="video-dimensions">1920x1080</span>
-                    </div>
                 </div>
 
                 <!-- Controls -->
                 <div class="controls-panel">
+                    <div class="video-info">
+                        <div class="info-item">
+                            <span class="label">File:</span>
+                            <span id="file-name">video.mp4</span>
+                        </div>
+                        <span class="divider">|</span>
+                        <div class="info-item">
+                            <span class="label">Duration:</span>
+                            <span id="video-duration">00:00</span>
+                        </div>
+                        <span class="divider">|</span>
+                        <div class="info-item">
+                            <span class="label">Res:</span>
+                            <span id="video-dimensions">1920x1080</span>
+                        </div>
+                    </div>
+
                     <div class="control-group">
                         <label>Extraction Mode</label>
                         <div class="toggle-group">
