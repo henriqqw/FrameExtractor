@@ -47,7 +47,12 @@ class FrameXtractor {
         if (typeof Plyr !== 'undefined') {
             this.player = new Plyr(this.elements.video, {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-                ratio: null // Adapt to video aspect ratio
+                ratio: null, // Adapt to video aspect ratio
+                clickToPlay: true,
+                hideControls: true,
+                resetOnEnd: true,
+                keyboard: { focused: true, global: true },
+                tooltips: { controls: true, seek: true }
             });
         } else {
             console.error('Plyr library not loaded');

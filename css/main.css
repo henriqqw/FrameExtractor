@@ -172,14 +172,38 @@ body::before {
   object-fit: contain;
 }
 
-/* Plyr Theme Overrides */
+/* Plyr Theme Overrides - Glassmorphism */
+/* Main Container */
+.plyr {
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Control Bar - Floating Glass */
+.plyr__controls {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px !important;
+  margin: 10px !important;
+  padding: 10px !important;
+  width: calc(100% - 20px) !important;
+  transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+/* Accent Colors */
 .plyr--full-ui input[type=range] {
   color: var(--accent-primary) !important;
 }
 
 .plyr__control--overlaid {
-  background: var(--accent-primary) !important;
+  background: rgba(0, 212, 255, 0.8) !important;
   color: #000 !important;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
 }
 
 .plyr--video .plyr__control.plyr__tab-focus,
@@ -187,10 +211,53 @@ body::before {
 .plyr--video .plyr__control[aria-expanded=true] {
   background: var(--accent-primary) !important;
   color: #000 !important;
+  transform: scale(1.1);
+}
+
+/* Big Play Button - Glowing Pulse */
+.plyr__control--overlaid:hover {
+  background: var(--accent-primary) !important;
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+  transform: scale(1.1);
+}
+
+/* Progress Bar & Seekers */
+.plyr__progress__container {
+  margin-left: 10px;
+}
+
+/* Volume Slider */
+.plyr__volume {
+  max-width: 100px;
+}
+
+/* Menu Items */
+.plyr__menu__container {
+  background: rgba(20, 20, 20, 0.9) !important;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+}
+
+.plyr__menu__container .plyr__control {
+  color: var(--text-secondary);
+}
+
+.plyr__menu__container .plyr__control:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: var(--accent-primary) !important;
 }
 
 .plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]::before {
   background: var(--accent-primary) !important;
+}
+
+/* Vertical Video Optimization */
+/* Ensure controls don't overlap too much on tall videos */
+.plyr--video.plyr--menu-open .plyr__controls {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .result-content {
