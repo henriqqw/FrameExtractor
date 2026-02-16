@@ -11,8 +11,8 @@
 ░░░░░░   ░░░░░░░░  ░░░░░░  ░░░░░░   ░░░░░░░░  ░░░░░░     ░░░░░  
 ```
 
-# 🎬 FrameExtractor 🎬
-<img width="100" height="100" alt="Mascote cibernético da FrameExtractor" src="https://github.com/user-attachments/assets/4dcf9ca1-8d0f-488c-912e-e6f6b024d1ff" />
+# 🎬 FrameXtractor 🎬
+<img width="100" height="100" alt="Mascote cibernético da FrameXtractor" src="https://github.com/user-attachments/assets/4dcf9ca1-8d0f-488c-912e-e6f6b024d1ff" />
 
 ### ⚡ *Secure Client-Side Video Frame Extraction* ⚡
 
@@ -32,9 +32,9 @@
 
 ## 🎯 Overview
 
-**FrameExtractor** is a privacy-first web application that allows you to extract high-quality frames directly from video files inside your browser.
+**FrameXtractor** is a privacy-first web application that allows you to extract high-quality frames directly from video files inside your browser.
 
-Unlike conventional online converters that upload your content to remote servers, FrameExtractor performs all processing locally on your device using native browser APIs.
+Unlike conventional online converters that upload your content to remote servers, FrameXtractor performs all processing locally on your device using native browser APIs.
 
 No uploads.  
 No cloud processing.  
@@ -44,7 +44,7 @@ Your video remains under your control at all times.
 
 ---
 
-## ☕ Why FrameExtractor?
+## ☕ Why FrameXtractor?
 
 ```diff
 + 🔒 100% Local Processing — Video never leaves your device
@@ -124,8 +124,8 @@ Your video remains under your control at all times.
 ### 💻 Local Development
 
 ```bash
-git clone https://github.com/henriqqw/FrameExtractor.git
-cd FrameExtractor
+git clone https://github.com/henriqqw/FrameXtractor.git
+cd FrameXtractor
 npm install
 npm run dev
 ```
@@ -201,7 +201,7 @@ All operations occur within the browser runtime.
 
 ### Privacy Comparison
 
-| Feature | FrameExtractor | Typical Online Tool |
+| Feature | FrameXtractor | Typical Online Tool |
 |----------|----------------|--------------------|
 | Upload Required | ❌ No | ✅ Yes |
 | Server Processing | ❌ No | ✅ Yes |
@@ -337,7 +337,7 @@ https://github.com/henriqqw
 
 ### 🎬 Extract precisely. Keep it private. 🎬
 
-If FrameExtractor helped you, consider giving the repository a ⭐
+If FrameXtractor helped you, consider giving the repository a ⭐
 
 </div>
 
