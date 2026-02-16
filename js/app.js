@@ -41,6 +41,12 @@ class FrameXtractor {
 
         this.ctx = this.elements.canvas ? this.elements.canvas.getContext('2d') : null;
 
+        // Initialize Plyr
+        this.player = new Plyr(this.elements.video, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            ratio: '16:9' // Default ratio, will adapt
+        });
+
         this.init();
     }
 
@@ -125,26 +131,39 @@ class FrameXtractor {
     loadVideo(url, file) {
         const { video, processingArea, dropZone, videoInfo } = this.elements;
 
-        video.src = url;
+        // Set video source via Plyr
+        this.player.source = {
+            type: 'video',
+            title: file.name,
+            sources: [
+                {
+                    src: url,
+                    type: file.type || 'video/mp4', // Default to mp4 if type empty
+                },
+            ],
+        };
 
         // Reset state
         this.state.videoLoaded = false;
         this.elements.resultArea.classList.add('hidden');
 
-        video.onloadedmetadata = () => {
+        // Plyr ready event
+        this.player.on('ready', () => {
             this.state.videoLoaded = true;
             videoInfo.name.textContent = file.name;
-            videoInfo.duration.textContent = this.formatTime(video.duration);
-            videoInfo.dimensions.textContent = `${video.videoWidth}x${video.videoHeight}`;
+            // Use player media element for proper duration/dimensions
+            const media = this.player.media;
+            videoInfo.duration.textContent = this.formatTime(media.duration);
+            videoInfo.dimensions.textContent = `${media.videoWidth}x${media.videoHeight}`;
 
             dropZone.classList.add('hidden');
             processingArea.classList.remove('hidden');
-        };
+        });
 
-        video.onerror = () => {
+        this.player.on('error', () => {
             alert('Error loading video. The format might not be supported by your browser.');
             this.resetApp();
-        };
+        });
     }
 
     formatTime(seconds) {
