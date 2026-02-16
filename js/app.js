@@ -100,6 +100,7 @@ class FrameXtractor {
 
         // Controls
         extractBtn?.addEventListener('click', () => this.startExtraction());
+        this.elements.stopBtn?.addEventListener('click', () => this.stopExtraction());
         resetBtn?.addEventListener('click', () => this.resetApp());
 
         // Settings
@@ -216,19 +217,121 @@ class FrameXtractor {
         this.elements.fpsValue.textContent = `${value} FPS`;
     }
 
-    startExtraction() {
+    async startExtraction() {
         if (!this.state.videoLoaded || !this.ctx) return;
+
+        // Reset abort controller
+        this.abortController = new AbortController();
 
         if (this.state.extractionMode === 'first') {
             this.extractSingleFrame();
         } else {
-            // Placeholder for 'all frames' logic if implemented later
-            // For now, we can just extract the current frame or alert
-            this.extractSingleFrame();
-            // NOTE: Full 'all frames' implementation would require Seek & Capture loop logic
-            // keeping it simple as per original scope effectively doing single extraction for now
-            // or we can implement a basic loop if requested. 
-            // Given "Clean Code" request, let's keep it reliable.
+            await this.extractAllFrames();
+        }
+    }
+
+    stopExtraction() {
+        if (this.abortController) {
+            this.abortController.abort();
+            this.abortController = null;
+        }
+    }
+
+    async extractAllFrames() {
+        const { video, canvas, fpsSlider, extractBtn, stopBtn, resetBtn, progressContainer, progressFill, progressText } = this.elements;
+        const fps = parseFloat(fpsSlider.value);
+        const interval = 1 / fps;
+        const duration = video.duration;
+        const totalFrames = Math.floor(duration * fps);
+
+        if (totalFrames > 1000) {
+            if (!confirm(`Warning: This will extract approximately ${totalFrames} frames. It might take a while and consume memory. Continue?`)) {
+                return;
+            }
+        }
+
+        // UI Updates
+        extractBtn.classList.add('hidden');
+        resetBtn.classList.add('hidden');
+        stopBtn.classList.remove('hidden');
+        progressContainer.classList.remove('hidden');
+
+        const zip = new JSZip();
+        let extractedCount = 0;
+        let currentTime = 0;
+
+        // Store original time to restore later
+        const originalTime = video.currentTime;
+        const wasPlaying = !video.paused;
+        video.pause();
+
+        try {
+            while (currentTime < duration) {
+                // Check for cancellation
+                if (this.abortController?.signal.aborted) {
+                    throw new Error('Extraction prohibited by user.');
+                }
+
+                // 1. Seek
+                video.currentTime = currentTime;
+
+                // 2. Wait for seek (Promisified)
+                await new Promise(resolve => {
+                    const onSeek = () => {
+                        video.removeEventListener('seeked', onSeek);
+                        resolve();
+                    };
+                    video.addEventListener('seeked', onSeek, { once: true });
+                });
+
+                // 3. Yield to UI (Critical for performance)
+                await new Promise(r => setTimeout(r, 0));
+
+                // 4. Capture
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                this.ctx.drawImage(video, 0, 0);
+
+                // 5. Blob & Zip
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, this.state.outputFormat));
+                const ext = this.state.outputFormat === 'image/jpeg' ? 'jpg' : 'png';
+                const filename = `frame_${String(extractedCount).padStart(4, '0')}_${currentTime.toFixed(2)}s.${ext}`;
+
+                zip.file(filename, blob);
+
+                // 6. Progress & Next Step
+                extractedCount++;
+                const percent = Math.min((currentTime / duration) * 100, 100);
+                progressFill.style.width = `${percent}%`;
+                progressText.textContent = `Processing: ${extractedCount} / ~${totalFrames} frames`;
+
+                currentTime += interval;
+            }
+
+            // Finalize ZIP
+            progressText.textContent = 'Generating ZIP...';
+            // Yield once more before heavy zip generation
+            await new Promise(r => setTimeout(r, 0));
+
+            const content = await zip.generateAsync({ type: "blob" });
+            saveAs(content, `frames_${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.zip`);
+
+            // Success UI
+            this.elements.resultArea.classList.remove('hidden');
+            this.elements.resultContent.innerHTML = `<p style="color:var(--success); text-align:center;">Successfully extracted ${extractedCount} frames to ZIP.</p>`;
+
+        } catch (e) {
+            console.warn('Extraction stopped:', e.message);
+            progressText.textContent = 'Stopped.';
+        } finally {
+            // Restore UI
+            stopBtn.classList.add('hidden');
+            extractBtn.classList.remove('hidden');
+            resetBtn.classList.remove('hidden');
+            progressContainer.classList.add('hidden');
+
+            // Restore Video State
+            video.currentTime = originalTime;
         }
     }
 
@@ -256,11 +359,12 @@ class FrameXtractor {
             resultArea.scrollIntoView({ behavior: 'smooth' });
         } catch (e) {
             console.error('Extraction error:', e);
-            alert('Failed to extract frame. Security constraints might be blocking this action.');
+            alert('Failed to extract frame. Security constraints might be blocking this action. Ensure the video is from a CORS-enabled source if remote.');
         }
     }
 
     downloadResult() {
+        // ... (Download single frame logic if needed, currently result area shows zip success or single image)
         const img = this.elements.resultContent.querySelector('img');
         if (img) {
             const ext = this.state.outputFormat === 'image/jpeg' ? 'jpg' : 'png';

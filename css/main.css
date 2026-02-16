@@ -694,6 +694,18 @@ input[type=range]:focus::-webkit-slider-thumb {
   font-size: 0.8rem;
 }
 
+.macos-button.danger {
+  background: rgba(255, 68, 68, 0.1);
+  color: var(--terminal-red);
+  border: 1px solid var(--terminal-red);
+}
+
+.macos-button.danger:hover {
+  background: var(--terminal-red);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(255, 68, 68, 0.4);
+}
+
 .macos-button.large {
   padding: 1rem 2rem;
   font-size: 1.1rem;
