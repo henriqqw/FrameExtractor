@@ -138,39 +138,44 @@ class FrameXtractor {
     loadVideo(url, file) {
         const { video, processingArea, dropZone, videoInfo } = this.elements;
 
-        // Set video source via Plyr
-        this.player.source = {
-            type: 'video',
-            title: file.name,
-            sources: [
-                {
-                    src: url,
-                    type: file.type || 'video/mp4', // Default to mp4 if type empty
-                },
-            ],
-        };
-
         // Reset state
         this.state.videoLoaded = false;
         this.elements.resultArea.classList.add('hidden');
 
-        // Plyr ready event
-        this.player.on('ready', () => {
+        // Set src directly on the video element (bypassing Plyr source setter for Blob URL reliability)
+        video.src = url;
+
+        // Ensure Plyr knows we updated the source if needed, 
+        // but usually native events will trigger Plyr update.
+        // We can explicitly call load() on the media element
+        video.load();
+
+        // One-time event listener for when metadata is loaded
+        // We use the native event because Plyr events might duplicate or behave differently on source change
+        const onLoadedMetadata = () => {
             this.state.videoLoaded = true;
-            videoInfo.name.textContent = file.name;
-            // Use player media element for proper duration/dimensions
-            const media = this.player.media;
-            videoInfo.duration.textContent = this.formatTime(media.duration);
-            videoInfo.dimensions.textContent = `${media.videoWidth}x${media.videoHeight}`;
+            videoInfo.name.textContent = file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name;
+
+            // Update Info
+            videoInfo.duration.textContent = this.formatTime(video.duration);
+            videoInfo.dimensions.textContent = `${video.videoWidth}x${video.videoHeight}`;
 
             dropZone.classList.add('hidden');
             processingArea.classList.remove('hidden');
-        });
 
-        this.player.on('error', () => {
-            alert('Error loading video. The format might not be supported by your browser.');
+            // Cleanup listener
+            video.removeEventListener('loadedmetadata', onLoadedMetadata);
+        };
+
+        const onError = (e) => {
+            console.error('Video Error:', e);
+            alert('Error loading video. Please try a different file.');
             this.resetApp();
-        });
+            video.removeEventListener('error', onError);
+        }
+
+        video.addEventListener('loadedmetadata', onLoadedMetadata);
+        video.addEventListener('error', onError);
     }
 
     formatTime(seconds) {
