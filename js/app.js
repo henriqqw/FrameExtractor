@@ -18,8 +18,16 @@ class FrameXtractor {
         this.elements = {
             dropZone: document.getElementById('drop-zone'),
             fileInput: document.getElementById('file-input'),
+            fileInput: document.getElementById('file-input'),
             selectBtn: document.getElementById('select-file-btn'),
-            video: document.getElementById('video-element'),
+            video: (() => {
+                const v = document.getElementById('video-element');
+                if (v) {
+                    v.setAttribute('playsinline', '');
+                    v.style.maxHeight = '60vh';
+                }
+                return v;
+            })(),
             processingArea: document.getElementById('processing-area'),
             extractBtn: document.getElementById('extract-btn'),
             resetBtn: document.getElementById('reset-btn'),
