@@ -1,6 +1,4 @@
 
-
-
 /**
  * FrameXtractor Application Logic
  * Handles video loading, frame extraction, and UI interactions.
@@ -11,13 +9,14 @@ class FrameXtractor {
         this.state = {
             videoLoaded: false,
             extractionMode: 'first', // 'first' or 'all'
+            frameMethod: 'fps', // 'fps' or 'total'
+            resolutionMode: 'original', // 'original' or 'custom'
             fps: 1,
             outputFormat: 'image/png'
         };
 
         this.elements = {
             dropZone: document.getElementById('drop-zone'),
-            fileInput: document.getElementById('file-input'),
             fileInput: document.getElementById('file-input'),
             selectBtn: document.getElementById('select-file-btn'),
             video: (() => {
@@ -28,6 +27,9 @@ class FrameXtractor {
                 }
                 return v;
             })(),
+            // Phase 6 Element
+            videoContainer: document.querySelector('.video-preview-container'),
+
             processingArea: document.getElementById('processing-area'),
             extractBtn: document.getElementById('extract-btn'),
             stopBtn: document.getElementById('stop-btn'),
@@ -42,16 +44,26 @@ class FrameXtractor {
             fpsSlider: document.getElementById('fps-slider'),
             fpsValue: document.getElementById('fps-value'),
             formatSelect: document.getElementById('format-select'),
-            toggleBtns: document.querySelectorAll('.toggle-btn'),
+            toggleBtns: document.querySelectorAll('.toggle-btn[data-mode]'),
             allFramesOptions: document.getElementById('all-frames-options'),
+
+            // Phase 3 Elements
+            frameMethodToggles: document.querySelectorAll('.toggle-btn[data-method]'),
+            fpsControls: document.getElementById('fps-controls'),
+            totalFramesControls: document.getElementById('total-frames-controls'),
+            totalFramesInput: document.getElementById('total-frames-input'),
+
+            // Phase 4 Elements
+            resolutionToggles: document.querySelectorAll('.toggle-btn[data-resolution]'),
+            customResControls: document.getElementById('custom-resolution-controls'),
+            customWidthInput: document.getElementById('custom-width-input'),
+
             videoInfo: {
                 name: document.getElementById('file-name'),
                 duration: document.getElementById('video-duration'),
                 dimensions: document.getElementById('video-dimensions')
             }
         };
-
-        this.ctx = this.elements.canvas ? this.elements.canvas.getContext('2d') : null;
 
         this.ctx = this.elements.canvas ? this.elements.canvas.getContext('2d') : null;
 
@@ -68,7 +80,6 @@ class FrameXtractor {
             });
         } else {
             console.error('Plyr library not loaded');
-            // Fallback or alert user
         }
 
         this.init();
@@ -79,7 +90,7 @@ class FrameXtractor {
     }
 
     bindEvents() {
-        const { dropZone, fileInput, selectBtn, extractBtn, resetBtn, downloadBtn, fpsSlider, formatSelect, toggleBtns } = this.elements;
+        const { dropZone, fileInput, selectBtn, extractBtn, resetBtn, downloadBtn, fpsSlider, formatSelect, toggleBtns, frameMethodToggles, resolutionToggles } = this.elements;
 
         // File Selection
         selectBtn?.addEventListener('click', () => fileInput.click());
@@ -115,6 +126,33 @@ class FrameXtractor {
             btn.addEventListener('click', (e) => this.setExtractionMode(e.target));
         });
 
+        // Phase 3: Frame Method Toggle
+        frameMethodToggles.forEach(btn => {
+            btn.addEventListener('click', (e) => this.setFrameMethod(e.target));
+        });
+
+        // Phase 4: Resolution Toggle
+        resolutionToggles.forEach(btn => {
+            btn.addEventListener('click', (e) => this.setResolutionMode(e.target));
+        });
+
+        // Resolution Preset Logic
+        const widthPreset = document.getElementById('width-preset');
+        const customWidthWrapper = document.getElementById('custom-width-wrapper');
+        const customWidthInput = document.getElementById('custom-width-input');
+
+        if (widthPreset && customWidthWrapper && customWidthInput) {
+            widthPreset.addEventListener('change', (e) => {
+                if (e.target.value === 'custom') {
+                    customWidthWrapper.classList.remove('hidden');
+                    customWidthInput.focus();
+                } else {
+                    customWidthWrapper.classList.add('hidden');
+                    customWidthInput.value = e.target.value;
+                }
+            });
+        }
+
         // Download
         downloadBtn?.addEventListener('click', () => this.downloadResult());
     }
@@ -143,7 +181,6 @@ class FrameXtractor {
 
     validateFile(file) {
         const validTypes = ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-matroska', 'video/avi'];
-        // Check MIME type or ensure it has a video extension as fallback
         const isVideo = validTypes.includes(file.type) || file.type.startsWith('video/') || /\.(mp4|webm|ogg|mov|mkv|avi)$/i.test(file.name);
 
         if (!isVideo) {
@@ -154,22 +191,15 @@ class FrameXtractor {
     }
 
     loadVideo(url, file) {
-        const { video, processingArea, dropZone, videoInfo } = this.elements;
+        const { video, processingArea, dropZone, videoInfo, videoContainer } = this.elements;
 
         // Reset state
         this.state.videoLoaded = false;
         this.elements.resultArea.classList.add('hidden');
 
-        // Set src directly on the video element (bypassing Plyr source setter for Blob URL reliability)
         video.src = url;
-
-        // Ensure Plyr knows we updated the source if needed, 
-        // but usually native events will trigger Plyr update.
-        // We can explicitly call load() on the media element
         video.load();
 
-        // One-time event listener for when metadata is loaded
-        // We use the native event because Plyr events might duplicate or behave differently on source change
         const onLoadedMetadata = () => {
             this.state.videoLoaded = true;
             videoInfo.name.textContent = file.name.length > 25 ? file.name.substring(0, 22) + '...' : file.name;
@@ -178,10 +208,17 @@ class FrameXtractor {
             videoInfo.duration.textContent = this.formatTime(video.duration);
             videoInfo.dimensions.textContent = `${video.videoWidth}x${video.videoHeight}`;
 
+            // Phase 6: Dynamic Aspect Ratio (Refined)
+            // Ensures container matches video shape but respects max-height constraints
+            if (videoContainer) {
+                const ratio = video.videoWidth / video.videoHeight;
+                videoContainer.style.aspectRatio = `${ratio}`;
+                videoContainer.style.height = 'auto'; // Reset height
+            }
+
             dropZone.classList.add('hidden');
             processingArea.classList.remove('hidden');
 
-            // Cleanup listener
             video.removeEventListener('loadedmetadata', onLoadedMetadata);
         };
 
@@ -216,9 +253,73 @@ class FrameXtractor {
         }
     }
 
+    setFrameMethod(targetBtn) {
+        const method = targetBtn.dataset.method;
+        this.state.frameMethod = method;
+
+        this.elements.frameMethodToggles.forEach(btn => btn.classList.remove('active'));
+        targetBtn.classList.add('active');
+
+        if (method === 'total') {
+            this.elements.fpsControls.classList.add('hidden');
+            this.elements.totalFramesControls.classList.remove('hidden');
+        } else {
+            this.elements.fpsControls.classList.remove('hidden');
+            this.elements.totalFramesControls.classList.add('hidden');
+        }
+    }
+
+    setResolutionMode(targetBtn) {
+        const mode = targetBtn.dataset.resolution;
+        this.state.resolutionMode = mode;
+
+        this.elements.resolutionToggles.forEach(btn => btn.classList.remove('active'));
+        targetBtn.classList.add('active');
+
+        if (mode === 'custom') {
+            this.elements.customResControls.classList.remove('hidden');
+        } else {
+            this.elements.customResControls.classList.add('hidden');
+        }
+    }
+
     updateFps(value) {
         this.state.fps = value;
         this.elements.fpsValue.textContent = `${value} FPS`;
+    }
+
+    calculateDimensions(video) {
+        if (this.state.resolutionMode === 'original') {
+            return { width: video.videoWidth, height: video.videoHeight };
+        } else {
+            let width = parseInt(this.elements.customWidthInput.value);
+            if (!width || width < 10) width = 1920;
+            if (width > 7680) width = 7680; // Cap at 8K
+
+            const aspectRatio = video.videoWidth / video.videoHeight;
+            const height = Math.round(width / aspectRatio);
+            return { width, height };
+        }
+    }
+
+    // Phase 5: Helper for non-blocking notifications
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        // Trigger reflow
+        void toast.offsetWidth;
+
+        toast.classList.add('show');
+
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => {
+                document.body.removeChild(toast);
+            }, 300);
+        }, 3000);
     }
 
     async startExtraction() {
@@ -242,19 +343,50 @@ class FrameXtractor {
     }
 
     async extractAllFrames() {
-        const { video, canvas, fpsSlider, extractBtn, stopBtn, resetBtn, progressContainer, progressFill, progressText } = this.elements;
-        const fps = parseFloat(fpsSlider.value);
-        const interval = 1 / fps;
-        const duration = video.duration;
-        const totalFrames = Math.floor(duration * fps);
+        const { video, canvas, fpsSlider, extractBtn, stopBtn, resetBtn, progressContainer, progressFill, progressText, totalFramesInput } = this.elements;
 
-        if (totalFrames > 1000) {
-            if (!confirm(`Warning: This will extract approximately ${totalFrames} frames. It might take a while and consume memory. Continue?`)) {
+        let interval, totalFrames;
+        const duration = video.duration;
+
+        // Phase 3: Total Frames vs FPS Logic
+        if (this.state.frameMethod === 'total') {
+            totalFrames = parseInt(totalFramesInput.value) || 100;
+            interval = duration / totalFrames;
+        } else {
+            const fps = parseFloat(fpsSlider.value);
+            interval = 1 / fps;
+            totalFrames = Math.floor(duration * fps);
+        }
+
+        // Phase 5: Auto-Optimize Guardrail
+        if (totalFrames > 1000 && this.state.outputFormat === 'image/png') {
+            // Auto-switch to JPEG to prevent memory crash
+            this.state.outputFormat = 'image/jpeg';
+            this.elements.formatSelect.value = 'image/jpeg';
+            this.showToast('Switched to JPEG format for performance (High frame count)', 'info');
+        }
+
+        // Phase 4: Resolution Calculation
+        const { width, height } = this.calculateDimensions(video);
+
+        // Phase 5: Memory Heuristic Check
+        // Estimate unwrapped raw pixel size in memory for ONE frame (approx 4 bytes/pixel)
+        // Total memory churn is high, but browser GC helps. 
+        // Real danger is ZIP size.
+        const estimatedRawSizeMB = (width * height * 4) / (1024 * 1024);
+        const estimatedTotalSizeMB = estimatedRawSizeMB * totalFrames;
+
+        if (estimatedTotalSizeMB > 2000) { // > 2GB estimated raw
+            if (!confirm(`Warning: High Memory Usage Detected.\nEstimated processing load: ~${(estimatedTotalSizeMB / 1024).toFixed(1)} GB.\nYour browser might crash. Continue?`)) {
+                return;
+            }
+        } else if (totalFrames > 1000) {
+            if (!confirm(`Warning: This will extract approximately ${totalFrames} frames. It might take a while. Continue?`)) {
                 return;
             }
         }
 
-        // UI Updates
+        // UI Updates: Disable interactions
         extractBtn.classList.add('hidden');
         resetBtn.classList.add('hidden');
         stopBtn.classList.remove('hidden');
@@ -263,13 +395,17 @@ class FrameXtractor {
         const zip = new JSZip();
         let extractedCount = 0;
         let currentTime = 0;
+        let lastUIUpdate = 0;
 
         // Store original time to restore later
         const originalTime = video.currentTime;
-        const wasPlaying = !video.paused;
         video.pause();
 
         try {
+            // Optimization: Set canvas size once
+            canvas.width = width;
+            canvas.height = height;
+
             while (currentTime < duration) {
                 // Check for cancellation
                 if (this.abortController?.signal.aborted) {
@@ -292,9 +428,7 @@ class FrameXtractor {
                 await new Promise(r => setTimeout(r, 0));
 
                 // 4. Capture
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                this.ctx.drawImage(video, 0, 0);
+                this.ctx.drawImage(video, 0, 0, width, height);
 
                 // 5. Blob & Zip
                 const blob = await new Promise(resolve => canvas.toBlob(resolve, this.state.outputFormat));
@@ -303,11 +437,16 @@ class FrameXtractor {
 
                 zip.file(filename, blob);
 
-                // 6. Progress & Next Step
                 extractedCount++;
-                const percent = Math.min((currentTime / duration) * 100, 100);
-                progressFill.style.width = `${percent}%`;
-                progressText.textContent = `Processing: ${extractedCount} / ~${totalFrames} frames`;
+
+                // 6. Progress & Next Step (Throttled UI Update)
+                const now = performance.now();
+                if (now - lastUIUpdate > 100 || extractedCount === totalFrames || extractedCount % 5 === 0) {
+                    const percent = Math.min((currentTime / duration) * 100, 100);
+                    progressFill.style.width = `${percent}%`;
+                    progressText.textContent = `Processing: ${extractedCount} / ~${totalFrames} frames`;
+                    lastUIUpdate = now;
+                }
 
                 currentTime += interval;
             }
@@ -323,6 +462,7 @@ class FrameXtractor {
             // Success UI
             this.elements.resultArea.classList.remove('hidden');
             this.elements.resultContent.innerHTML = `<p style="color:var(--success); text-align:center;">Successfully extracted ${extractedCount} frames to ZIP.</p>`;
+            this.elements.resultArea.scrollIntoView({ behavior: 'smooth' });
 
         } catch (e) {
             console.warn('Extraction stopped:', e.message);
@@ -336,17 +476,22 @@ class FrameXtractor {
 
             // Restore Video State
             video.currentTime = originalTime;
+
+            // Clear abort controller
+            this.abortController = null;
         }
     }
 
     extractSingleFrame() {
         const { video, canvas, resultContent, resultArea } = this.elements;
 
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+        // Phase 4: Resolution Calculation
+        const { width, height } = this.calculateDimensions(video);
+        canvas.width = width;
+        canvas.height = height;
 
         // Draw current video frame to canvas
-        this.ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        this.ctx.drawImage(video, 0, 0, width, height);
 
         try {
             const dataUrl = canvas.toDataURL(this.state.outputFormat);

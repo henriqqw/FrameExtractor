@@ -1,12 +1,12 @@
-# FrameXtractor - Documentação Técnica e de Design
+# FrameXtractor - Documentação Técnica e de Design (V2)
 
-FrameXtractor é uma ferramenta web client-side (navegador) para extração segura e instantânea de frames de vídeos.
+FrameXtractor é uma ferramenta web client-side (navegador) para extração segura, instantânea e precisa de frames de vídeos. A versão V2 foca em controle total do usuário, estabilidade para grandes arquivos e uma experiência de uso premium.
 
 ## 1. Metodologia e Filosofia
 O projeto segue uma abordagem **Privacy-First** e **Serverless**:
 -   **Client-Side Processing**: Todo o processamento ocorre no navegador do usuário. O vídeo nunca é enviado para um servidor, garantindo privacidade total e velocidade instantânea (sem upload/download).
--   **Vanilla JS & Modern Web APIs**: Utiliza HTML5, CSS3 e JavaScript puro (ES6+) para máxima performance e leveza, sem frameworks pesados como React ou Vue, garantindo carregamento rápido.
--   **Design System Glassmorphism**: Uma estética moderna e premium que utiliza transparências e desfoque (`backdrop-filter`) para criar profundidade e hierarquia visual.
+-   **Vanilla JS & Modern Web APIs**: Utiliza HTML5, CSS3 e JavaScript puro (ES6+) para máxima performance e leveza, sem frameworks pesados.
+-   **Design System Glassmorphism**: Uma estética moderna e premium que utiliza transparências, desfoque (`backdrop-filter`) e sombras sutis para criar profundidade e hierarquia visual.
 
 ## 2. Estrutura do Projeto
 
@@ -18,68 +18,67 @@ FrameXtractor/
 ├── howto.html       # Página de Instruções
 ├── about.html       # Página Sobre
 ├── css/
-│   └── main.css     # Estilos globais, variáveis, tema Glass e componentes
+│   └── main.css     # Estilos globais, variáveis, tema Glass e componentes responsivos
 ├── js/
-│   ├── app.js       # Lógica principal da aplicação (Controller)
+│   ├── app.js       # Lógica principal (Controller), Extração, Eventos
 │   └── theme.js     # Gerenciamento de tema Claro/Escuro
 └── public/          # Assets estáticos (ícones, imagens)
 ```
 
-## 3. Lógica de Extração
+## 3. Lógica de Extração e Funcionalidades V2
 
-A extração de frames utiliza o elemento HTML5 `<canvas>` como intermediário.
+A extração de frames utiliza o elemento HTML5 `<canvas>` como intermediário, com lógica otimizada na V2.
 
-### Extração de Frame Único
-1.  O vídeo é pausado no `currentTime` desejado via slider ou controles.
-2.  Desenhamos o quadro atual do vídeo no Canvas: `ctx.drawImage(video, 0, 0)`.
-3.  O Canvas é convertido para uma URL de dados (Blob/DataURL) no formato escolhido (PNG/JPEG).
-4.  A imagem resultante é exibida na tela para download.
+### Modos de Extração
+1.  **Frame Único**: Extrai o momento exato onde o vídeo está pausado.
+2.  **Todos os Frames**: Extração em lote com duas sub-modalidades:
+    *   **FPS (Frames Por Segundo)**: Extrai com base em uma taxa fixa (ex: 1 frame a cada segundo).
+    *   **Total Frames (Novo na V2)**: O usuário define a quantidade exata de imagens finais (ex: 100 frames), e o sistema calcula o intervalo automaticamente.
 
-### Extração em Lote ("All Frames") - Lógica Robusta
-Esta funcionalidade permite extrair múltiplos frames com base em uma taxa de quadros (FPS) definida pelo usuário.
-1.  **Cálculo de Intervalo**: Determinamos o salto de tempo: `intervalo = 1 / FPS`.
-2.  **Loop Assíncrono Bloqueante**:
-    *   Iteramos do tempo `0` até a `duração` total do vídeo.
-    *   Definimos `video.currentTime = tempo_atual`.
-    *   **Aguardamos o evento `seeked`**: Utilizamos uma Promessa que só resolve quando o navegador confirma que o frame está carregado e pronto para renderização. Isso garante precisão frame-perfect.
-    *   Desenhamos no Canvas e convertemos para Blob.
-    *   Adicionamos o Blob em um objeto `JSZip` (biblioteca de compactação).
-    *   **Yielding (`setTimeout`)**: A cada frame, pausamos a execução por 0ms para devolver o controle à Thread Principal da UI. Isso previne o congelamento da página ("Travamento") durante operações longas.
-3.  **Geração do ZIP**: Ao final, o JSZip compila todos os arquivos e dispara o download automático.
+### Controle de Resolução (Novo na V2)
+O usuário pode escolher a resolução de saída para equilibrar qualidade e tamanho de arquivo:
+-   **Presets**: 4K, 2K, 1080p, 720p, 480p.
+-   **Custom**: Permite digitar uma largura específica (ex: 800px). A altura é calculada automaticamente para manter a proporção original (Aspect Ratio).
+
+### Performance e Guardrails (Novo na V2)
+Para garantir que o navegador não trave durante extrações pesadas:
+-   **Troca Automática para JPEG**: Se a extração gerar >1000 frames, o formato muda automaticamente para JPEG (mais leve que PNG) para economizar memória, com notificação via Toast.
+-   **Avisos de Memória**: O sistema estima o uso de RAM antes de iniciar e alerta o usuário se a extração for perigosamente grande (>2GB).
+-   **Yielding de UI**: O loop de extração faz pausas programadas (`setTimeout`) para permitir que a interface do usuário se atualize e não congele.
+
+### Player Responsivo Inteligente
+-   **Aspect Ratio Dinâmico**: O container do vídeo se ajusta automaticamente à proporção do vídeo carregado (Vertical 9:16, Widescreen 16:9, etc.).
+-   **Limites Inteligentes**: O player obedece `max-height: 75vh` (Desktop) e `60vh` (Mobile) para nunca "estourar" a tela ou empurrar os controles para fora de vista.
 
 ## 4. Fluxos de Usuário (User Flows)
 
 ### Fluxo Principal: Extração
 1.  **Upload**: Usuário arrasta um vídeo para a DropZone ou clica para selecionar.
 2.  **Preview & Ajustes**:
-    *   O vídeo carrega no player **Plyr** customizado.
-    *   Usuário navega até o momento desejado (ou configura FPS para extração total).
+    *   O vídeo carrega no player customizado PLYR.
+    *   Usuário escolhe o modo (Único ou Lote).
+    *   Define a resolução desejada.
 3.  **Processamento**:
-    *   Usuário clica em "Extract Frame".
-    *   O sistema exibe barra de progresso e botão de "Stop".
-    *   Resultado aparece abaixo.
-4.  **Download**:
-    *   Usuário clica em "Download" para salvar a imagem ou ZIP.
+    *   Usuário clica em "Extract Frame" ou "Start Extraction".
+    *   Barra de progresso exibe status em tempo real.
+    *   Botão "Stop" permite cancelar a qualquer momento.
+4.  **Resultado**:
+    *   Ao finalizar, a tela rola automaticamente para a área de resultados.
+    *   Download disponível como imagem única ou arquivo ZIP.
 
 ## 5. UI/UX Design
 
 ### Identidade Visual
--   **Glassmorphism**: Painéis flutuantes com fundo translúcido (`rgba(0,0,0,0.6)`) e desfoque (`blur(15px)`). O uso de bordas semitransparentes (`1px solid rgba(255,255,255,0.1)`) cria separação clara.
+-   **Glassmorphism**: Painéis flutuantes com fundo translúcido e desfoque (`blur(15px)`).
 -   **Cores**: Tema escuro profundo com acentos em **Cyan Neon** (`#00d4ff`).
--   **Tipografia**: *Inter* (Google Fonts) para legibilidade limpa e moderna.
+-   **Hierarquia de Espaçamento**: O layout utiliza espaçamentos consistentes (`gap: 1.5rem`) e agrupamentos lógicos (`.control-group`) para facilitar a leitura.
 
-### Player de Vídeo (Customizado)
--   Utilizamos a biblioteca **Plyr.js** para substituir o player nativo inconsistente dos navegadores.
--   **Estilização Profunda**:
-    *   Barra de controle flutuante em formato de "pílula", centralizada e sem tocar as bordas.
-    *   Botões estritamente circulares (`border-radius: 50%`) com efeitos de brilho (`box-shadow`) ao passar o mouse, eliminando cliques acidentais e melhorando a estética.
-    *   **Layout Responsivo**: Adapta-se automaticamente a vídeos verticais (9:16) escondendo controles desnecessários e evitando bloquear a visualização.
-    *   **Sem Bordas Pretas**: O container do vídeo é transparente e flexível, permitindo que o vídeo ocupe apenas o espaço necessário.
+### Player de Vídeo (Plyr Customizado)
+-   Barra de controle flutuante estilo "pílula".
+-   Botões circulares com feedback tátil.
+-   Totalmente responsivo e adaptável a qualquer formato de vídeo.
 
 ### Feedback e Interação
--   **Micro-interações**: Botões escalam (`scale(1.02)`) ao passar o mouse para feedback tátil.
--   **Estados de Carregamento**: Spinners e barras de progresso informam o status de operações longas.
--   **Prevenção de Erros**:
-    *   Botão de "Stop" permite cancelar processos pesados a qualquer momento.
-    *   Alerta de memória se tentar extrair >1000 frames.
-    *   Validação de tipo de arquivo na seleção.
+-   **Toasts**: Notificações discretas no canto inferior para avisos de sistema.
+-   **Auto-Scroll**: A página rola suavemente até o conteúdo relevante (ex: resultados após extração).
+-   **Micro-interações**: Botões reagem ao hover/click.

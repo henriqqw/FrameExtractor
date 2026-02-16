@@ -165,12 +165,63 @@
                     </div>
 
                     <div id="all-frames-options" class="control-group hidden">
-                        <label>Sampling Rate</label>
-                        <div class="range-wrapper">
-                            <input type="range" id="fps-slider" min="0.5" max="30" step="0.5" value="1">
-                            <span id="fps-value" style="color:var(--macos-text-primary); font-weight:500;">1 FPS</span>
+                        <label>Extraction Method</label>
+                        <div class="toggle-group secondary-toggle" style="margin-bottom: 1rem;">
+                            <button class="toggle-btn active" data-method="fps">FPS</button>
+                            <button class="toggle-btn" data-method="total">Total Frames</button>
                         </div>
-                        <p class="hint">Higher FPS = More images & longer processing time.</p>
+
+                        <!-- FPS Controls -->
+                        <div id="fps-controls">
+                            <label class="sub-label">Sampling Rate</label>
+                            <div class="range-wrapper">
+                                <input type="range" id="fps-slider" min="0.5" max="30" step="0.5" value="1">
+                                <span id="fps-value" style="color:var(--macos-text-primary); font-weight:500;">1
+                                    FPS</span>
+                            </div>
+                            <p class="hint">Higher FPS = More images & longer processing time.</p>
+                        </div>
+
+                        <!-- Total Frames Controls -->
+                        <div id="total-frames-controls" class="hidden">
+                            <label class="sub-label">Total Images</label>
+                            <div class="input-wrapper">
+                                <input type="number" id="total-frames-input" class="macos-input" value="100" min="1"
+                                    max="5000">
+                                <span class="unit">frames</span>
+                            </div>
+                            <p class="hint">Evenly distributed across the video.</p>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label>Resolution</label>
+                        <div class="toggle-group secondary-toggle" style="margin-bottom: 1rem;">
+                            <button class="toggle-btn active" data-resolution="original">Original</button>
+                            <button class="toggle-btn" data-resolution="custom">Custom Width</button>
+                        </div>
+
+                        <div id="custom-resolution-controls" class="hidden">
+                            <label class="sub-label">Width Preset</label>
+                            <select id="width-preset" class="custom-select" style="margin-bottom: 0.5rem;">
+                                <option value="3840">4K (3840px)</option>
+                                <option value="2560">2K (2560px)</option>
+                                <option value="1920" selected>1080p (1920px)</option>
+                                <option value="1280">720p (1280px)</option>
+                                <option value="854">480p (854px)</option>
+                                <option value="custom">Custom...</option>
+                            </select>
+
+                            <div id="custom-width-wrapper" class="hidden">
+                                <label class="sub-label" style="margin-top: 0.5rem;">Custom Width (px)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="custom-width-input" class="macos-input" value="1920"
+                                        min="100" max="7680">
+                                    <span class="unit">px</span>
+                                </div>
+                            </div>
+                            <p class="hint">Height will be adjusted automatically.</p>
+                        </div>
                     </div>
 
                     <div class="control-group">

@@ -554,6 +554,132 @@ input[type=range]:focus::-webkit-slider-thumb {
   margin-bottom: 3rem;
 }
 
+/* Processing Area Layout (Phase 7 Refinements) */
+.processing-area {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  /* Consistent spacing */
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto 3rem;
+}
+
+.video-preview-container {
+  width: min(100%, 900px);
+  max-height: 75vh;
+  margin: 0 auto;
+  aspect-ratio: 16 / 9;
+  /* Fallback, overridden by JS */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .video-preview-container {
+    max-height: 60vh;
+  }
+}
+
+/* Ensure Plyr fits the container */
+.plyr {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.controls-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: var(--glass-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Ensure no double spacing */
+.control-group {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.control-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.video-info {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-item .label {
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.divider {
+  color: var(--glass-border);
+}
+
+@media (max-width: 600px) {
+  .processing-area {
+    gap: 1rem;
+    /* Tighter on mobile */
+  }
+
+  .controls-panel {
+    padding: 1rem;
+    gap: 1.25rem;
+  }
+
+  .video-info {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+  }
+
+  .divider {
+    display: none;
+  }
+
+  .info-item {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}
+
 /* Upload Area */
 .upload-area {
   background: var(--glass-bg);
@@ -997,6 +1123,35 @@ input[type=range]:focus::-webkit-slider-thumb {
 }
 
 /* Results Actions */
+/* Optimized Result Preview */
+.result-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  min-height: 200px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.result-content img {
+  max-height: 400px;
+  /* Constrain height */
+  max-width: 100%;
+  /* Responsive width */
+  width: auto;
+  /* Maintain aspect ratio */
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
+  transition: transform 0.3s ease;
+}
+
+.result-content img:hover {
+  transform: scale(1.02);
+}
+
 .results-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1411,4 +1566,101 @@ input[type=range]:focus::-webkit-slider-thumb {
     transform: scale(0.98);
     transition: transform 0.1s ease;
   }
+}
+
+/* Phase 3: Total Frames Mode Styles */
+.secondary-toggle {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 2px;
+  border-radius: 6px;
+  display: inline-flex;
+}
+
+.secondary-toggle .toggle-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+}
+
+.sub-label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  transition: var(--transition-fast);
+}
+
+.input-wrapper:focus-within {
+  border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.macos-input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+}
+
+.unit {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+
+  white-space: nowrap;
+}
+
+/* Phase 5: Toast Notifications */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  border: 1px solid var(--glass-border);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.info {
+  border-left: 4px solid var(--accent-primary);
+}
+
+.toast.success {
+  border-left: 4px solid var(--success);
+}
+
+.toast.warning {
+  border-left: 4px solid var(--warning);
+}
+
+.toast.error {
+  border-left: 4px solid var(--error);
 }
