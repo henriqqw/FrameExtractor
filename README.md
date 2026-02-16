@@ -1,4 +1,4 @@
-# FrameXtractor - Documentação Técnica e de Design (V2)
+# FrameXtractor 
 
 FrameXtractor é uma ferramenta web client-side (navegador) para extração segura, instantânea e precisa de frames de vídeos. A versão V2 foca em controle total do usuário, estabilidade para grandes arquivos e uma experiência de uso premium.
 
