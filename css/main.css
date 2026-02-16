@@ -152,6 +152,8 @@ body::before {
   min-height: 200px;
   box-shadow: var(--shadow-md);
   background: black;
+  height: auto;
+  /* Allow height to adapt */
 }
 
 /* Ensure Plyr fits within container constraints */
@@ -189,6 +191,27 @@ body::before {
 
 .plyr__menu__container .plyr__control[role=menuitemradio][aria-checked=true]::before {
   background: var(--accent-primary) !important;
+}
+
+.result-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 7px;
+  margin-top: 1rem;
+}
+
+.result-content img {
+  max-height: 70vh;
+  /* Constrain height */
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
 }
 
 .video-info {

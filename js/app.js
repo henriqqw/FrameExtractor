@@ -47,7 +47,7 @@ class FrameXtractor {
         if (typeof Plyr !== 'undefined') {
             this.player = new Plyr(this.elements.video, {
                 controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-                ratio: '16:9'
+                ratio: null // Adapt to video aspect ratio
             });
         } else {
             console.error('Plyr library not loaded');
@@ -234,9 +234,7 @@ class FrameXtractor {
             // Create Image Element
             const img = new Image();
             img.src = dataUrl;
-            img.style.maxWidth = '100%';
-            img.style.borderRadius = '8px';
-            img.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
+            // Styles are handled in CSS (.result-content img) for clean code
 
             resultContent.innerHTML = '';
             resultContent.appendChild(img);
