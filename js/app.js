@@ -41,11 +41,18 @@ class FrameXtractor {
 
         this.ctx = this.elements.canvas ? this.elements.canvas.getContext('2d') : null;
 
-        // Initialize Plyr
-        this.player = new Plyr(this.elements.video, {
-            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
-            ratio: '16:9' // Default ratio, will adapt
-        });
+        this.ctx = this.elements.canvas ? this.elements.canvas.getContext('2d') : null;
+
+        // Initialize Plyr if available
+        if (typeof Plyr !== 'undefined') {
+            this.player = new Plyr(this.elements.video, {
+                controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+                ratio: '16:9'
+            });
+        } else {
+            console.error('Plyr library not loaded');
+            // Fallback or alert user
+        }
 
         this.init();
     }
