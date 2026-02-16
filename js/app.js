@@ -1,7 +1,7 @@
 
 
 
-class FrameExtractor {
+class FrameXtractor {
     constructor() {
         this.initElements();
         this.bindEvents();
@@ -63,22 +63,39 @@ class FrameExtractor {
     }
 
     handleFile(file) {
-        if (!file.type.startsWith('video/')) {
-            alert('Please select a valid video file.');
+        // Check MIME type or extension (fallback for Windows where type might be empty)
+        const isVideo = file.type.startsWith('video/') || /\.(mp4|webm|ogg|mov|mkv|avi)$/i.test(file.name);
+
+        if (!isVideo) {
+            alert('Please select a valid video file.\nDetected type: ' + (file.type || 'unknown') + '\nFile: ' + file.name);
+            console.error('Invalid file type:', file.type, file.name);
             return;
         }
 
         const url = URL.createObjectURL(file);
-        this.video.src = url;
-        this.processingArea.classList.remove('hidden');
-        document.getElementById('drop-zone').classList.add('hidden'); // Hide upload area
 
+        // Reset previous error handlers/states
+        this.video.onerror = null;
+
+        // Set up event handlers before setting src
         this.video.onloadedmetadata = () => {
             this.videoLoaded = true;
             document.getElementById('file-name').textContent = file.name;
             document.getElementById('video-duration').textContent = this.formatTime(this.video.duration);
             document.getElementById('video-dimensions').textContent = `${this.video.videoWidth}x${this.video.videoHeight}`;
+            console.log('Video metadata loaded');
         };
+
+        this.video.onerror = (e) => {
+            console.error('Error loading video:', this.video.error);
+            alert('Error loading video file. The format might not be supported by your browser.');
+            this.processingArea.classList.add('hidden');
+            document.getElementById('drop-zone').classList.remove('hidden');
+        };
+
+        this.video.src = url;
+        this.processingArea.classList.remove('hidden');
+        document.getElementById('drop-zone').classList.add('hidden'); // Hide upload area
     }
 
     formatTime(seconds) {
@@ -103,5 +120,5 @@ class FrameExtractor {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    new FrameExtractor();
+    new FrameXtractor();
 });
